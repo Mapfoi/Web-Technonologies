@@ -2,20 +2,24 @@
 # параметр командной строки (например, для числа
 # 123 сумма цифр равна 6).
 
-MyPass = False
-x = None
-while not MyPass:
-    try:
-        x = int(input())
-        MyPass = True
-    except ValueError:
-        print("Please enter a positive integer")
-        continue
+import sys
 
-res = 0
-while x > 10:
-    res = res + x % 10
-    x //= 10
 
-res += x
-print(res)
+def sum_digits(number):
+    result = 0
+    while number > 10:
+        result = result + number % 10
+        number //= 10
+
+    result += number
+    return result
+
+
+try:
+    x = int(sys.argv[1])
+    result = sum_digits(x)
+    print(f"Sum of digits of number {x} = {result}")
+
+except ValueError:
+    print("Error: Please enter a valid integer")
+    sys.exit(1)

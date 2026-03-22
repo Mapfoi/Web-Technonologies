@@ -3,59 +3,79 @@
 # первого уровня отображались красным цветом, второго – синим,
 # третьего – зелёным, четвёртого – фиолетовым, пятого и далее – жёлтым.
 
-import sys
-
 
 def generate_static_html():
-    """Генерирует статическую HTML-страницу с многомерной структурой (без JS)"""
+    """Generates a static HTML page with a multidimensional structure (no JS)"""
 
-    # Рекурсивная функция для генерации HTML дерева
+    # Recursive function to generate HTML tree
     def generate_tree(data, level=1):
-        html = '<ul style="list-style-type: none; padding-left: 20px;">\n'
 
-        # Цвета для разных уровней
+        # <ul> creates an unordered list with custom styles
+        # list-style-type: none removes bullet points
+        # padding-left adds indentation for nested levels
+        html_tree = '<ul style="list-style-type: none; padding-left: 20px;">\n'
+
+        # Colors for different nesting levels
         colors = {
-            1: '#ff4444',  # Красный
-            2: '#4444ff',  # Синий
-            3: '#44ff44',  # Зеленый
-            4: '#aa44ff',  # Фиолетовый
+            1: '#ff4444',  # Red - level 1
+            2: '#4444ff',  # Blue - level 2
+            3: '#44ff44',  # Green - level 3
+            4: '#aa44ff',  # Purple - level 4
         }
 
         for key, value in data.items():
-            color = colors.get(level, '#ffdd44')  # Для 5+ уровня - желтый
+            color = colors.get(level, '#ffdd44')  # Yellow for level 5+
             text_color = 'white' if level <= 2 or level == 4 else '#333'
 
-            html += f'<li style="margin: 5px 0;">'
-            html += f'<div style="background-color: {color}; color: {text_color}; padding: 8px 12px; '
-            html += f'border-radius: 5px; display: inline-block; min-width: 200px;">'
-            html += f'<strong>{key}</strong>'
-            html += f'<span style="float: right; font-size: 11px; opacity: 0.8;">'
-            html += f'Уровень {level}</span>'
-            html += f'</div>'
+            # <li> creates a list item
+            # margin adds spacing between items
+            html_tree += f'<li style="margin: 5px 0;">'
 
+            # <div> creates a container block for each node
+            # background-color sets the node's background
+            # color sets text color
+            # padding adds internal spacing
+            # border-radius rounds the corners
+            # display: inline-block makes the block width fit content
+            # min-width ensures minimum width for consistency
+            html_tree += f'<div style="background-color: {color}; color: {text_color}; padding: 8px 12px; '
+            html_tree += f'border-radius: 5px; display: inline-block; min-width: 200px;">'
+
+            # <strong> makes the key text bold
+            html_tree += f'<strong>{key}</strong>'
+
+            # <span> creates an inline container for the level indicator
+            # float: right positions the text to the right
+            # font-size adjusts text size
+            # opacity adds transparency
+            html_tree += f'<span style="float: right; font-size: 11px; opacity: 0.8;">'
+            html_tree += f'Level {level}</span>'
+            html_tree += f'</div>'
+
+            # Recursively process children if they exist
             if 'children' in value and value['children']:
-                html += generate_tree(value['children'], level + 1)
+                html_tree += generate_tree(value['children'], level + 1)
 
-            html += f'</li>\n'
+            html_tree += f'</li>\n'
 
-        html += '</ul>\n'
-        return html
+        html_tree += '</ul>\n'
+        return html_tree
 
-    # Структура данных (более 5 уровней)
+    # Data structure (more than 5 levels)
     structure = {
-        "Красный": {
+        "Red": {
             "children": {
-                "Синий": {
+                "Blue": {
                     "children": {
-                        "Зеленый": {
+                        "Green": {
                             "children": {
-                                "Фиолетовый": {
+                                "Purple": {
                                     "children": {
-                                        "Желтый": {
+                                        "Yellow": {
                                             "children": {
-                                                "Желтый": {
+                                                "Yellow": {
                                                     "children": {
-                                                        "Желтый": {
+                                                        "Yellow": {
                                                             "children": {}
                                                         }
                                                     }
@@ -72,37 +92,33 @@ def generate_static_html():
         }
     }
 
-    html = f"""<!DOCTYPE html>
+    # Main HTML document structure
+    # <html> is the root element
+    # <body> contains visible page content
+    # <div class="container"> creates a container div (class for potential CSS styling)
+    # <h1> defines a top-level heading
+    html_content = f"""<!DOCTYPE html>
 <html>
 <body>
     <div class="container">
-        <h1>📊 Многомерная структура (5+ уровней)</h1>
+        <h1>📊 Multi-dimensional structure (5+ levels)</h1>
         {generate_tree(structure)}
-        
+
     </div>
 </body>
 </html>"""
 
-    return html
-
-
-def count_levels(data, current_level=1):
-    """Подсчет максимального уровня вложенности"""
-    max_level = current_level
-
-    for value in data.values():
-        if 'children' in value and value['children']:
-            child_level = count_levels(value['children'], current_level + 1)
-            max_level = max(max_level, child_level)
-
-    return max_level
+    return html_content
 
 
 if __name__ == "__main__":
-    html_content = generate_static_html()
+    html_output = generate_static_html()
 
+    # Open file in write mode with UTF-8 encoding
+    # 'w' mode creates a new file or overwrites existing one
+    # encoding='utf-8' ensures proper character handling
     with open("multidimensional_static.html", "w", encoding="utf-8") as f:
-        f.write(html_content)
+        f.write(html_output)
 
-    print("✅ Статическая HTML-страница создана: multidimensional_static.html")
-    print("📊 Структура содержит 7+ уровней вложенности")
+    print("✅ Static HTML page created: multidimensional_static.html")
+    print("📊 Structure contains 7+ levels of nesting")

@@ -6,13 +6,13 @@ import sys
 
 
 def sum_digits(number):
-    result = 0
+    res = 0
     while number > 10:
-        result = result + number % 10
+        res = res + number % 10
         number //= 10
 
-    result += number
-    return result
+    res += number
+    return res
 
 
 try:
